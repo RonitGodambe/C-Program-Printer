@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>C Program Printer</title>
+
+  <!-- Syntax highlighting: requires an internet connection when opening this file. -->
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlightjs-line-numbers.js/2.9.0/styles/line-numbers.min.css">
+
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 28px;
+      background: #0b0f14;
+      color: #e6edf3;
+      font-family: Segoe UI, Arial, sans-serif;
+    }
+    .wrap { max-width: 1050px; margin: auto; }
+    h1 { margin: 0 0 8px; font-size: 25px; }
+    .hint { color: #9da7b3; margin: 0 0 24px; }
+    .inputs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+    label { display: block; font-weight: 650; margin-bottom: 8px; }
+    textarea {
+      width: 100%;
+      min-height: 270px;
+      resize: vertical;
+      padding: 14px;
+      border: 1px solid #303946;
+      border-radius: 9px;
+      background: #111820;
+      color: #e6edf3;
+      font: 13px/1.55 Consolas, "Courier New", monospace;
+      tab-size: 4;
+    }
+    .actions { display: flex; gap: 10px; margin: 18px 0 28px; }
+    button {
+      border: 0;
+      border-radius: 7px;
+      padding: 11px 17px;
+      background: #238636;
+      color: white;
+      font-weight: 650;
+      cursor: pointer;
+    }
+    button.secondary { background: #303946; }
+    .page {
+      background: #0d1117;
+      border: 1px solid #303946;
+      border-radius: 10px;
+      padding: 28px;
+      box-shadow: 0 10px 35px #0006;
+    }
+    .page h2 {
+      margin: 0 0 14px;
+      color: #f0f6fc;
+      font-size: 17px;
+      border-bottom: 1px solid #303946;
+      padding-bottom: 9px;
+    }
+    .section { margin-bottom: 26px; }
+    pre {
+      margin: 0;
+      padding: 16px;
+      border-radius: 7px;
+      background: #161b22 !important;
+      color: #e6edf3;
+      overflow-wrap: anywhere;
+      white-space: pre-wrap;
+      font: 12px/1.55 Consolas, "Courier New", monospace;
+    }
+    pre code {
+      font: inherit;
+      white-space: pre-wrap;
+      background: transparent !important;
+    }
+    .line-numbers .line-numbers-rows {
+      border-right: 1px solid #39414d;
+    }
+    .line-numbers-rows > span:before { color: #718096 !important; }
+
+    @media (max-width: 750px) {
+      body { padding: 14px; }
+      .inputs { grid-template-columns: 1fr; }
+      .page { padding: 16px; }
+    }
+
+
+    .site-footer {
+      margin: 22px 0 4px;
+      padding: 15px 10px;
+      text-align: center;
+      color: #8b949e;
+      font-size: 12px;
+      border-top: 1px solid #303946;
+      letter-spacing: .2px;
+    }
+    .site-footer strong { color: #e6edf3; font-weight: 650; }
+    .site-footer a {
+      color: #58a6ff;
+      text-decoration: none;
+    }
+    .site-footer a:hover { text-decoration: underline; }
+    @media print {
+      .site-footer {
+        color: #8b949e !important;
+        border-top-color: #303946 !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
+      .site-footer strong { color: #e6edf3 !important; }
+      .site-footer a { color: #58a6ff !important; }
+    }
+
+    @page { size: A4; margin: 14mm; }
+    @media print {
+      html, body {
+        background: #0d1117 !important;
+        color: #e6edf3 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
+      .no-print { display: none !important; }
+      .wrap { max-width: none; }
+      .page {
+        border: 0;
+        border-radius: 0;
+        box-shadow: none;
+        padding: 0;
+        background: #0d1117 !important;
+      }
+      .section { break-inside: avoid; }
+      pre {
+        background: #161b22 !important;
+        color: #e6edf3 !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
+      h2 { color: #f0f6fc !important; }
+    }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <div class="no-print">
+      <h1>C Program Printer</h1>
+      <p class="hint">Paste your C source code and the program's actual output, then generate a print-ready page.</p>
+
+      <div class="inputs">
+        <div>
+          <label for="sourceInput">C SOURCE CODE</label>
+          <textarea id="sourceInput" spellcheck="false" placeholder="#include <stdio.h>
+
+int main(void)
+{
+    printf(&quot;Hello, world!&quot;);
+    return 0;
+}"></textarea>
+        </div>
+        <div>
+          <label for="outputInput">TERMINAL OUTPUT</label>
+          <textarea id="outputInput" spellcheck="false" placeholder="Hello, world!"></textarea>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button onclick="generatePreview()">Generate Preview</button>
+        <button class="secondary" onclick="window.print()">Print / Save as PDF</button>
+      </div>
+    </div>
+
+    <article class="page">
+      <section class="section">
+        <h2>SOURCE CODE</h2>
+        <pre><code id="sourcePreview" class="language-c">// Paste your C program above, then click Generate Preview.</code></pre>
+      </section>
+      <section class="section">
+        <h2>OUTPUT</h2>
+        <pre id="outputPreview">Paste your program output above, then click Generate Preview.</pre>
+      </section>
+    </article>
+
+    <footer class="site-footer no-print">
+      Built by <strong>Ronit Godambe</strong>
+      <span aria-hidden="true"> · </span>
+      <a href="https://github.com/Ronit-Godambe" target="_blank" rel="noopener noreferrer">
+        GitHub: github.com/Ronit-Godambe
+      </a>
+    </footer>
+  </main>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlightjs-line-numbers.js/2.9.0/highlightjs-line-numbers.min.js"></script>
+  <script>
+    function generatePreview() {
+      const source = document.getElementById('sourceInput').value;
+      const output = document.getElementById('outputInput').value;
+      const code = document.getElementById('sourcePreview');
+
+      code.textContent = source || '// No source code entered.';
+      document.getElementById('outputPreview').textContent =
+        output || '(No output entered.)';
+
+      if (window.hljs) {
+        code.removeAttribute('data-highlighted');
+        hljs.highlightElement(code);
+        if (window.hljs.lineNumbersBlock) {
+          const oldRows = code.parentElement.querySelector('.line-numbers-rows');
+          if (oldRows) oldRows.remove();
+          hljs.lineNumbersBlock(code);
+        }
+      }
+    }
+  </script>
+</body>
+</html>
